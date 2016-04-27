@@ -1,0 +1,23 @@
+group 'au.id.philipbrown'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.13'
+}
+
+repositories {
+    mavenCentral()
+}
+
+def springVersion = '4.2.5.RELEASE'
+
+dependencies {
+    compile "org.springframework:spring-web:${springVersion}"
+    compile 'com.google.code.findbugs:annotations:3.0.1'
+    testCompile 'junit:junit:4.12'
+}
