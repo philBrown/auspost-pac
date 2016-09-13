@@ -11,6 +11,16 @@ public class DomesticParcelServiceRequest implements RequestParams {
     private final int height;
     private final double weight;
 
+    /**
+     * Parameters for domestic parcel service request.
+     *
+     * @param fromPostCode    source postcode
+     * @param toPostcode      destination postcode
+     * @param length          length in cm
+     * @param width           width in cm
+     * @param height          height in cm
+     * @param weight          weight in kg
+     */
     public DomesticParcelServiceRequest(final String fromPostCode, final String toPostcode, final int length, final int width, final int height, final double weight) {
         this.fromPostCode = fromPostCode;
         this.toPostcode = toPostcode;

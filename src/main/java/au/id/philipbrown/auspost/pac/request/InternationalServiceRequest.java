@@ -8,6 +8,12 @@ public class InternationalServiceRequest implements RequestParams {
     private final Country country;
     private final Number weight;
 
+    /**
+     * Parameters for domestic letter and parcel service request.
+     *
+     * @param country    destination country
+     * @param weight     weight in gm for letter, kg for parcel
+     */
     public InternationalServiceRequest(final Country country, final Number weight) {
         this.country = country;
         this.weight = weight;

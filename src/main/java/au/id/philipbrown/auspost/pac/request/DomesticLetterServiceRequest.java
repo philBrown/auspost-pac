@@ -9,7 +9,20 @@ public class DomesticLetterServiceRequest implements RequestParams {
     private final int thickness;
     private final int weight;
 
-    public DomesticLetterServiceRequest(final int length, final int width, final int thickness, final int weight) {
+    /**
+     * Parameters for domestic letter service request.
+     *
+     * @param length       length in mm
+     * @param width        width in mm
+     * @param thickness    thickness in mm
+     * @param weight       weight in gm
+     */
+    public DomesticLetterServiceRequest(
+            final int length,
+            final int width,
+            final int thickness,
+            final int weight
+    ) {
         this.length = length;
         this.width = width;
         this.thickness = thickness;
