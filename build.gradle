@@ -14,7 +14,7 @@ repositories {
     mavenCentral()
 }
 
-def springVersion = '4.2.5.RELEASE'
+def springVersion = '4.3.2.RELEASE'
 
 dependencies {
     compile "org.springframework:spring-web:${springVersion}"

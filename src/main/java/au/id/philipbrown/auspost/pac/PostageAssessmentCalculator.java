@@ -2,6 +2,9 @@ package au.id.philipbrown.auspost.pac;
 
 import au.id.philipbrown.auspost.pac.model.Country;
 import au.id.philipbrown.auspost.pac.model.Service;
+import au.id.philipbrown.auspost.pac.request.DomesticLetterServiceRequest;
+import au.id.philipbrown.auspost.pac.request.DomesticParcelServiceRequest;
+import au.id.philipbrown.auspost.pac.request.InternationalServiceRequest;
 
 import java.util.List;
 
@@ -12,36 +15,26 @@ public interface PostageAssessmentCalculator {
     List<Country> getCountries();
 
     /**
-     * @param length       letter length in mm.
-     * @param width        letter width in mm.
-     * @param thickness    letter thickness in mm.
-     * @param weight       letter weight in grams.
+     * @param request    request parameter object.
      * @return the available services and additional options for a domestic letter.
      */
-    List<Service> getDomesticLetterServices(int length, int width, int thickness, int weight);
+    List<Service> getDomesticLetterServices(DomesticLetterServiceRequest request);
 
     /**
-     * @param country    destination country.
-     * @param weight     letter weight in grams.
+     * @param request    request parameter object.
      * @return the available services and additional options for an international letter.
      */
-    List<Service> getInternationalLetterServices(Country country, int weight);
+    List<Service> getInternationalLetterServices(InternationalServiceRequest request);
 
     /**
-     * @param fromPostcode    postcode the parcel will be sent from.
-     * @param toPostcode      postcode the parcel will be sent to.
-     * @param length          parcel length in cm.
-     * @param width           parcel width in cm.
-     * @param height          parcel height in cm.
-     * @param weight          parcel weight in kg.
+     * @param request    request parameter object.
      * @return the available services and additional options for a domestic parcel.
      */
-    List<Service> getDomesticParcelServices(String fromPostcode, String toPostcode, int length, int width, int height, double weight);
+    List<Service> getDomesticParcelServices(DomesticParcelServiceRequest request);
 
     /**
-     * @param country    destination country.
-     * @param weight     parcel weight in kg.
+     * @param request    request parameter object.
      * @return the available services and additional options for an international parcel.
      */
-    List<Service> getInternationalParcelServices(Country country, double weight);
+    List<Service> getInternationalParcelServices(InternationalServiceRequest request);
 }

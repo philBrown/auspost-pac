@@ -3,6 +3,10 @@ package au.id.philipbrown.auspost.pac;
 import au.id.philipbrown.auspost.pac.interceptor.AuthKeyHttpHeaderInterceptor;
 import au.id.philipbrown.auspost.pac.model.Country;
 import au.id.philipbrown.auspost.pac.model.Service;
+import au.id.philipbrown.auspost.pac.request.DomesticLetterServiceRequest;
+import au.id.philipbrown.auspost.pac.request.DomesticParcelServiceRequest;
+import au.id.philipbrown.auspost.pac.request.InternationalServiceRequest;
+import au.id.philipbrown.auspost.pac.request.RequestParams;
 import au.id.philipbrown.auspost.pac.response.CountryResponse;
 import au.id.philipbrown.auspost.pac.response.ServiceResponse;
 import org.springframework.stereotype.Component;
@@ -28,19 +32,6 @@ public class RestPostageAssessmentCalculator implements PostageAssessmentCalcula
     private static final String INTERNATIONAL_LETTER_POSTAGE_URI = BASE_URI + "/postage/letter/international/calculate.xml";
     private static final String INTERNATIONAL_PARCEL_POSTAGE_URI = BASE_URI + "/postage/parcel/international/calculate.xml";
 
-    private static final String FROM_POSTCODE = "from_postcode";
-    private static final String TO_POSTCODE = "to_postcode";
-    private static final String LENGTH = "length";
-    private static final String WIDTH = "width";
-    private static final String HEIGHT = "height";
-    private static final String THICKNESS = "thickness";
-    private static final String WEIGHT = "weight";
-    private static final String COUNTRY_CODE = "country_code";
-    private static final String SERVICE_CODE= "service_code";
-    private static final String OPTION_CODE= "option_code";
-    private static final String SUB_OPTION_CODE= "suboption_code";
-    private static final String EXTRA_COVER = "extra_cover";
-
     private final RestOperations restClient;
 
     public RestPostageAssessmentCalculator(final String apiKey) {
@@ -55,50 +46,32 @@ public class RestPostageAssessmentCalculator implements PostageAssessmentCalcula
     }
 
     @Override
-    public List<Service> getDomesticLetterServices(final int length, final int width, final int thickness, final int weight) {
-        final String url = buildUri(DOMESTIC_LETTER_SERVICE_URI, weight, length, width)
-                .queryParam(THICKNESS, thickness)
-                .toUriString();
-        return getServices(url);
+    public List<Service> getDomesticLetterServices(final DomesticLetterServiceRequest request) {
+        return getServices(buildUri(DOMESTIC_LETTER_SERVICE_URI, request));
     }
 
     @Override
-    public List<Service> getInternationalLetterServices(final Country country, final int weight) {
-        final String url = buildUri(INTERNATIONAL_LETTER_SERVICE_URI, weight)
-                .queryParam(COUNTRY_CODE, country)
-                .toUriString();
-        return getServices(url);
+    public List<Service> getInternationalLetterServices(final InternationalServiceRequest request) {
+        return getServices(buildUri(INTERNATIONAL_LETTER_SERVICE_URI, request));
     }
 
     @Override
-    public List<Service> getDomesticParcelServices(final String fromPostcode, final String toPostcode, final int length, final int width, final int height, final double weight) {
-        final String url = buildUri(DOMESTIC_PARCEL_SERVICE_URI, weight, length, width)
-                .queryParam(FROM_POSTCODE, fromPostcode)
-                .queryParam(TO_POSTCODE, toPostcode)
-                .queryParam(HEIGHT, height)
-                .toUriString();
-        return getServices(url);
+    public List<Service> getDomesticParcelServices(final DomesticParcelServiceRequest request) {
+        return getServices(buildUri(DOMESTIC_PARCEL_SERVICE_URI, request));
     }
 
     @Override
-    public List<Service> getInternationalParcelServices(final Country country, final double weight) {
-        final String url = buildUri(INTERNATIONAL_PARCEL_SERVICE_URI, weight)
-                .queryParam(COUNTRY_CODE, country)
-                .toUriString();
-        return getServices(url);
+    public List<Service> getInternationalParcelServices(final InternationalServiceRequest request) {
+        return getServices(buildUri(INTERNATIONAL_PARCEL_SERVICE_URI, request));
     }
 
     private List<Service> getServices(final String url) {
         return restClient.getForObject(url, ServiceResponse.class).getServices();
     }
 
-    private UriComponentsBuilder buildUri(final String url, final Number weight) {
-        return UriComponentsBuilder.fromHttpUrl(url).queryParam(WEIGHT, weight);
-    }
-
-    private UriComponentsBuilder buildUri(final String url, final Number weight, final int length, final int width) {
-        return buildUri(url, weight)
-                .queryParam(LENGTH, length)
-                .queryParam(WIDTH, width);
+    private String buildUri(final String url, final RequestParams params) {
+        return UriComponentsBuilder.fromHttpUrl(url)
+                .queryParams(params.getParams())
+                .toUriString();
     }
 }
