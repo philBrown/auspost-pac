@@ -33,8 +33,9 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 public class RestPostageAssessmentCalculatorTest {
+
     private static final String API_KEY = "12345678";
-    private static final Country NZ = new Country("NZ");
+    private final TestParams testParams = new TestParams();
 
     private MockRestServiceServer server;
     private PostageAssessmentCalculator pac;
@@ -72,7 +73,7 @@ public class RestPostageAssessmentCalculatorTest {
 
     @Test
     public void getDomesticLetterServices() throws Exception {
-        DomesticLetterServiceRequest params = new DomesticLetterServiceRequest(110, 220, 5, 50);
+        DomesticLetterServiceRequest params = testParams.getDomesticLetterServiceRequest();
         expectRequest(DOMESTIC_LETTER_SERVICE_URI, params);
         List<Service> services = pac.getDomesticLetterServices(params);
         assertThat(services.size(), is(3));
@@ -80,7 +81,7 @@ public class RestPostageAssessmentCalculatorTest {
 
     @Test
     public void getInternationalLetterServices() throws Exception {
-        InternationalServiceRequest params = new InternationalServiceRequest(NZ, 50);
+        InternationalServiceRequest params = testParams.getInternationalLetterServiceRequest();
         expectRequest(INTERNATIONAL_LETTER_SERVICE_URI, params);
         List<Service> services = pac.getInternationalLetterServices(params);
         assertThat(services.size(), is(5));
@@ -88,18 +89,18 @@ public class RestPostageAssessmentCalculatorTest {
 
     @Test
     public void getDomesticParcelServices() throws Exception {
-        DomesticParcelServiceRequest params = new DomesticParcelServiceRequest("3000", "3000", 23, 13, 4, 0.523);
+        DomesticParcelServiceRequest params = testParams.getDomesticParcelServiceRequest();
         expectRequest(DOMESTIC_PARCEL_SERVICE_URI, params);
         List<Service> services = pac.getDomesticParcelServices(params);
-        assertThat(services.isEmpty(), is(false));
+        assertThat(services.size(), is(6));
     }
 
     @Test
     public void getInternationalParcelServices() throws Exception {
-        InternationalServiceRequest params = new InternationalServiceRequest(NZ, 0.523);
+        InternationalServiceRequest params = testParams.getInternationalParcelServiceRequest();
         expectRequest(INTERNATIONAL_PARCEL_SERVICE_URI, params);
         List<Service> services = pac.getInternationalParcelServices(params);
-        assertThat(services.isEmpty(), is(false));
+        assertThat(services.size(), is(4));
     }
 
     private void expectRequest(final String uri, final RequestParams params) throws URISyntaxException {
